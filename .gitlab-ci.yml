@@ -1,0 +1,56 @@
+# CI runs in the same image as the dev container.
+# Build .devcontainer/Dockerfile, push it to your registry, and set DEV_IMAGE
+# (Settings → CI/CD → Variables) or edit the default below.
+stages:
+  - lint
+  - test
+  - pages
+
+variables:
+  DEV_IMAGE: "$CI_REGISTRY_IMAGE/devcontainer:latest"
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.uv-cache"
+  UV_LINK_MODE: copy
+
+image: $DEV_IMAGE
+
+cache:
+  key:
+    files: [uv.lock]
+  paths: [.uv-cache]
+
+before_script:
+  - uv sync --locked --all-groups
+
+lint:
+  stage: lint
+  script:
+    - uv run ruff check --output-format=gitlab . > gl-code-quality-report.json || true
+    - uv run ruff check .
+    - uv run ruff format --check .
+    - uv run mypy
+  artifacts:
+    when: always
+    reports:
+      codequality: gl-code-quality-report.json
+
+test:
+  stage: test
+  script:
+    - uv run pytest --cov --cov-report=term --cov-report=xml:coverage.xml --junitxml=junit.xml
+  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    when: always
+    reports:
+      junit: junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+pages:
+  stage: pages
+  script:
+    - uv run --group docs mkdocs build -d public
+  artifacts:
+    paths: [public]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

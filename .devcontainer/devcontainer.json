@@ -1,0 +1,57 @@
+{
+  "name": "mypackage",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": { "BASE_TAG": "ltr" }
+  },
+
+  // GPUs and enough shared memory for PyTorch DataLoader workers.
+  // Remove "--gpus" on machines without an NVIDIA GPU (e.g. Apple Silicon laptops).
+  "runArgs": ["--gpus", "all", "--shm-size=16g"],
+
+  // Keep the image's own start command, so JupyterLab (and the noVNC desktop with QGIS) run.
+  "overrideCommand": false,
+  "forwardPorts": [8888],
+  "portsAttributes": { "8888": { "label": "JupyterLab / QGIS desktop" } },
+
+  // Work as the image's normal user; on Linux VS Code maps its UID to yours,
+  // so files you create are not owned by root on the host.
+  "remoteUser": "jovyan",
+  "updateRemoteUserUID": true,
+
+  "containerEnv": {
+    "UV_PROJECT_ENVIRONMENT": "${containerWorkspaceFolder}/.venv"
+  },
+
+  // Runs once after the container is created: venv + pre-commit hooks.
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
+
+  // Personal mounts (datasets, caches) go in .devcontainer/devcontainer-local/devcontainer.json,
+  // which is git-ignored. Example:
+  // "mounts": [{ "source": "/data/sentinel1", "target": "/data/sentinel1", "type": "bind", "readonly": true }],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.mypy-type-checker",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter",
+        "tamasfe.even-better-toml",
+        "editorconfig.editorconfig",
+        "streetsidesoftware.code-spell-checker"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": ["tests"],
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": { "source.organizeImports": "explicit" }
+        }
+      }
+    }
+  }
+}

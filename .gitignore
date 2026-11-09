@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.uv-cache/
+
+# Tools
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+coverage.xml
+junit.xml
+gl-code-quality-report.json
+site/
+public/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Personal dev-container overrides
+.devcontainer/devcontainer-local/*
+!.devcontainer/devcontainer-local/.keep
+
+# Data and outputs: mount them, never commit them
+data/
+outputs/
+*.tif
+*.tiff
+*.nc
+*.zarr/
+
+# OS / editors
+.DS_Store
+.idea/
