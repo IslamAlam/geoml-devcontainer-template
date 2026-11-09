@@ -1,17 +1,19 @@
-# CI runs in the same image as the dev container.
-# Build .devcontainer/Dockerfile, push it to your registry, and set DEV_IMAGE
-# (Settings → CI/CD → Variables) or edit the default below.
+# Default image: a small official uv image, so the pipeline (incl. GitLab Pages)
+# works on any GitLab runner out of the box.
+# To run CI in the exact dev-container image instead (e.g. for GPU tests):
+# build .devcontainer/Dockerfile, push it to the registry, and set CI_IMAGE
+# (Settings > CI/CD > Variables), e.g. $CI_REGISTRY_IMAGE/devcontainer:latest
 stages:
   - lint
   - test
   - pages
 
 variables:
-  DEV_IMAGE: "$CI_REGISTRY_IMAGE/devcontainer:latest"
+  CI_IMAGE: "ghcr.io/astral-sh/uv:python3.12-bookworm-slim"
   UV_CACHE_DIR: "$CI_PROJECT_DIR/.uv-cache"
   UV_LINK_MODE: copy
 
-image: $DEV_IMAGE
+image: $CI_IMAGE
 
 cache:
   key:

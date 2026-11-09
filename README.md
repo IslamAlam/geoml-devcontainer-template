@@ -125,8 +125,13 @@ Never put data into the image or the repository.
 - `uv.lock` pins every Python package. Commit it.
 - Pin the base image tag (`BASE_TAG` in `devcontainer.json`, e.g. a concrete QGIS version instead
   of `ltr`) and the uv image tag in the Dockerfile when you publish results.
-- CI uses the same image: after changing `.devcontainer/Dockerfile`, rebuild and push it, and set
-  `DEV_IMAGE` in GitLab (Settings → CI/CD → Variables).
+- CI runs in a small uv image by default. To run it in the dev-container image instead, build and
+  push `.devcontainer/Dockerfile` and set `CI_IMAGE` in GitLab (Settings → CI/CD → Variables).
+
+## Documentation site
+
+On every push to `main`, the `pages` CI job builds the mkdocs site and publishes it with GitLab
+Pages (Deploy → Pages shows the URL). No extra setup is needed.
 
 ## Troubleshooting
 
