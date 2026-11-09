@@ -37,3 +37,6 @@ outputs/
 # OS / editors
 .DS_Store
 .idea/
+
+# Cloudflare
+.wrangler/

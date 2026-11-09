@@ -1,0 +1,14 @@
+// Cloudflare Workers static-assets deployment of the mkdocs documentation site.
+// `npx wrangler deploy` first runs build.command (mkdocs -> ./site), then uploads ./site.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "geoml-devcontainer-template",
+  "compatibility_date": "2026-11-01",
+  "build": {
+    "command": "uv run --group docs mkdocs build --strict -d site"
+  },
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "404-page"
+  }
+}

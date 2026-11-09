@@ -133,6 +133,10 @@ Never put data into the image or the repository.
 On every push to `main`, the `pages` CI job builds the mkdocs site and publishes it with GitLab
 Pages (Deploy → Pages shows the URL). No extra setup is needed.
 
+**Cloudflare (Workers & Pages) instead:** connect the repository and keep the deploy command
+`npx wrangler deploy`. `wrangler.jsonc` builds the site with mkdocs into `site/` and serves it
+as static assets. Rename `"name"` in `wrangler.jsonc` to your project.
+
 ## Troubleshooting
 
 | Symptom | Fix |
