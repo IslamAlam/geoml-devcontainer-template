@@ -249,6 +249,7 @@ uv), which the Dockerfile simply installs again. Source code of the b-data image
 | First build is slow | The CUDA + QGIS image is many GB; pull it once per server: `docker pull glcr.b-data.ch/jupyterlab/cuda/qgis/base:ltr` |
 | `docker pull ... not found`, *No manifest found* or *502 Bad Gateway* for the base image | The b-data registry is down or the tag is gone. Switch to the [image mirror](#image-mirror), or list the tags with the command below and set another `BASE_TAG` |
 | `postCreateCommand ... failed`: *git failed. Is it installed, and are you in a Git repository?* | The folder is not a git repository yet. Run `git init -b main`, then `make install` (or *Rebuild Container*) |
+| `pre-commit` fails with *No matching distribution found for ruamel.yaml* (or another package) | pip inside the hook setup cannot reach PyPI. The template builds hook environments with uv (`pre-commit-uv`); in older projects run `uv add --dev pre-commit-uv`, then `uv run pre-commit install-hooks` |
 | `make env` says torch or rasterio is not installed | Install the extras: `uv sync --extra ml --extra geo` |
 | JupyterLab asks for a password or token | Run `jupyter server list` in the container terminal and open the URL it prints |
 | pre-commit changed files and the commit stopped | That is expected: `git add` the fixes and commit again |

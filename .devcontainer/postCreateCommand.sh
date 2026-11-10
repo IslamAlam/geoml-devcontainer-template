@@ -13,7 +13,9 @@ git config --global --add safe.directory "$(pwd)"
 
 # Install the git hooks (needs a git repository)
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  uv run pre-commit install --install-hooks
+  uv run pre-commit install
+  # Pre-build the hook environments; if that fails (e.g. no network), it is retried on the first commit
+  uv run pre-commit install-hooks || echo "Warning: pre-commit hook environments not built yet; they are retried on the first commit."
 else
   echo "Note: $(pwd) is not a git repository yet, so the pre-commit hooks were not installed."
   echo "      Run 'git init -b main' and then 'make install'."
