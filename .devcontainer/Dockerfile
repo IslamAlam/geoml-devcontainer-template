@@ -3,9 +3,11 @@
 #   - Xfce desktop served through noVNC (open it from JupyterLab)
 #   - default user: jovyan
 # Tags: https://gitlab.b-data.ch/jupyterlab/cuda/qgis/base/container_registry
-# Pin a concrete version tag (e.g. 3.44.x) for reproducible papers; "ltr" follows the QGIS LTR line.
+# Pinned to a concrete QGIS version (3.44.x is the current LTR) for reproducible results.
+# Moving tags such as "ltr" can disappear while the maintainer republishes images.
+# List the available tags: see "Troubleshooting" in the README.
 ARG BASE_IMAGE=glcr.b-data.ch/jupyterlab/cuda/qgis/base
-ARG BASE_TAG=ltr
+ARG BASE_TAG=3.44.15
 FROM ${BASE_IMAGE}:${BASE_TAG}
 
 USER root

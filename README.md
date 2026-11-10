@@ -73,7 +73,10 @@ VS Code detects `.devcontainer/` and offers **Reopen in Container**:
 
 If you missed the notification, use the command palette (<kbd>F1</kbd> or
 <kbd>Ctrl/Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) → **Dev Containers: Reopen in Container**.
-After changing the `Dockerfile` or `devcontainer.json`, use **Rebuild and Reopen in Container**.
+After changing the `Dockerfile` or `devcontainer.json`, run **Dev Containers: Rebuild Container**
+(from inside the container) or **Rebuild and Reopen in Container** (from the server).
+
+![Dev Containers: Rebuild Container](docs/img/05b-rebuild-command.png)
 
 ![Dev Containers commands in the command palette](docs/img/05-reopen-command.png)
 
@@ -199,8 +202,9 @@ Never put data into the image or the repository.
 ## Reproducibility
 
 - `uv.lock` pins every Python package. Commit it.
-- Pin the base image tag (`BASE_TAG` in `devcontainer.json`, e.g. a concrete QGIS version instead
-  of `ltr`) and the uv image tag in the Dockerfile when you publish results.
+- The base image is pinned to a concrete QGIS version (`BASE_TAG` in `devcontainer.json`). To update,
+  change it to a newer tag and run *Dev Containers: Rebuild Container*. Pin the uv image tag in the
+  Dockerfile too when you publish results.
 - CI runs in a small uv image by default. To run it in the dev-container image instead, build and
   push `.devcontainer/Dockerfile` and set `CI_IMAGE` in GitLab (Settings → CI/CD → Variables).
 
@@ -220,11 +224,22 @@ as static assets. Rename `"name"` in `wrangler.jsonc` to your project.
 | `torch.cuda.is_available()` is `False` | Host lacks the NVIDIA Container Toolkit, or `--gpus all` is missing from `runArgs` |
 | DataLoader crashes with shared-memory errors | Increase `--shm-size` in `runArgs` |
 | Files created in the container are owned by root | Keep `"remoteUser": "jovyan"` and `"updateRemoteUserUID": true` |
-| First build is slow | The CUDA + QGIS image is many GB; pull it once per server: `docker pull glcr.b-data.ch/jupyterlab/cuda/qgis/base:ltr` |
+| First build is slow | The CUDA + QGIS image is many GB; pull it once per server: `docker pull glcr.b-data.ch/jupyterlab/cuda/qgis/base:3.44.15` |
+| `docker pull ... not found` / *No manifest found* for the base image | That tag is not (or no longer) published. List the tags with the command below and set another one as `BASE_TAG` in `devcontainer.json` |
 | `postCreateCommand ... failed`: *git failed. Is it installed, and are you in a Git repository?* | The folder is not a git repository yet. Run `git init -b main`, then `make install` (or *Rebuild Container*) |
 | `make env` says torch or rasterio is not installed | Install the extras: `uv sync --extra ml --extra geo` |
 | JupyterLab asks for a password or token | Run `jupyter server list` in the container terminal and open the URL it prints |
 | pre-commit changed files and the commit stopped | That is expected: `git add` the fixes and commit again |
+
+### Listing the available base-image tags
+
+Run on the server (needs only `curl` and `python3`):
+
+```bash
+REPO=jupyterlab/cuda/qgis/base
+TOKEN=$(curl -s "https://gitlab.b-data.ch/jwt/auth?service=container_registry&scope=repository:$REPO:pull" | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
+curl -s -H "Authorization: Bearer $TOKEN" "https://glcr.b-data.ch/v2/$REPO/tags/list" | python3 -m json.tool
+```
 
 ## Credits
 

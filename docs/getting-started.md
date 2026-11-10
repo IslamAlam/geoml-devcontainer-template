@@ -50,7 +50,10 @@ VS Code detects `.devcontainer/` and offers **Reopen in Container**:
 
 If you missed the notification, use the command palette (<kbd>F1</kbd> or
 <kbd>Ctrl/Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) → **Dev Containers: Reopen in Container**.
-After changing the `Dockerfile` or `devcontainer.json`, use **Rebuild and Reopen in Container**.
+After changing the `Dockerfile` or `devcontainer.json`, run **Dev Containers: Rebuild Container**
+(from inside the container) or **Rebuild and Reopen in Container** (from the server).
+
+![Dev Containers: Rebuild Container](img/05b-rebuild-command.png)
 
 ![Dev Containers commands in the command palette](img/05-reopen-command.png)
 
