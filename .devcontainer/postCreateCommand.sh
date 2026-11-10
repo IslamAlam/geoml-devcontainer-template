@@ -35,4 +35,9 @@ RC
   fi
 done
 
+if [ -z "$(git config user.email || true)" ]; then
+  echo "Note: git has no user name/e-mail in this container. Set them before your first commit:"
+  echo "      git config --global user.name \"Your Name\"; git config --global user.email you@example.org"
+fi
+
 echo "Dev container ready. Try: make help"

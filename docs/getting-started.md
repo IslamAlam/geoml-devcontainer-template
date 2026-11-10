@@ -74,6 +74,8 @@ minutes; later starts take seconds. Lines with `Exit code 1` in the log are norm
 The container is ready when the status bar shows `Dev Container: my-project @ <server>` and the
 setup terminal ends with `Dev container ready. Try: make help`.
 
+![Container setup finished](img/06b-container-ready.png)
+
 ## 6. Check that everything works
 
 `make help` lists the available commands:
@@ -97,6 +99,32 @@ make check
 ```
 
 ![make test with coverage](img/09-make-test.png)
+
+You can also run and debug single tests from the **Testing** panel (flask icon in the left bar):
+
+![Testing panel with the discovered tests](img/09b-testing-panel.png)
+
+## 7. Make the first commit
+
+If git does not know you yet inside the container, set your name and e-mail once:
+
+```bash
+git config --global user.name "Jane Doe"
+git config --global user.email jane@example.org
+```
+
+Then commit. The pre-commit hooks check every commit; the first run takes a minute to set up:
+
+```bash
+git add -A
+git commit -m "Initial commit"
+```
+
+![First commit with all pre-commit checks passing](img/15-first-commit-pre-commit.png)
+
+If a hook reports *Failed* because it fixed a file (formatting, trailing spaces), run
+`git add -A` and commit again. To publish the project, create an empty repository on GitHub or
+GitLab and follow its instructions to `git remote add origin …` and `git push -u origin main`.
 
 ## JupyterLab and QGIS
 

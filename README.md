@@ -93,6 +93,8 @@ minutes; later starts take seconds. Lines with `Exit code 1` in the log are norm
 The container is ready when the status bar shows `Dev Container: my-project @ <server>` and the
 setup terminal ends with `Dev container ready. Try: make help`.
 
+![Container setup finished](docs/img/06b-container-ready.png)
+
 ### 6. Check that everything works
 
 `make help` lists the available commands:
@@ -116,6 +118,32 @@ make check
 ```
 
 ![make test with coverage](docs/img/09-make-test.png)
+
+You can also run and debug single tests from the **Testing** panel (flask icon in the left bar):
+
+![Testing panel with the discovered tests](docs/img/09b-testing-panel.png)
+
+### 7. Make the first commit
+
+If git does not know you yet inside the container, set your name and e-mail once:
+
+```bash
+git config --global user.name "Jane Doe"
+git config --global user.email jane@example.org
+```
+
+Then commit. The pre-commit hooks check every commit; the first run takes a minute to set up:
+
+```bash
+git add -A
+git commit -m "Initial commit"
+```
+
+![First commit with all pre-commit checks passing](docs/img/15-first-commit-pre-commit.png)
+
+If a hook reports *Failed* because it fixed a file (formatting, trailing spaces), run
+`git add -A` and commit again. To publish the project, create an empty repository on GitHub or
+GitLab and follow its instructions to `git remote add origin …` and `git push -u origin main`.
 
 ---
 
@@ -250,6 +278,8 @@ uv), which the Dockerfile simply installs again. Source code of the b-data image
 | `docker pull ... not found`, *No manifest found* or *502 Bad Gateway* for the base image | The b-data registry is down or the tag is gone. Switch to the [image mirror](#image-mirror), or list the tags with the command below and set another `BASE_TAG` |
 | `postCreateCommand ... failed`: *git failed. Is it installed, and are you in a Git repository?* | The folder is not a git repository yet. Run `git init -b main`, then `make install` (or *Rebuild Container*) |
 | `pre-commit` fails with *No matching distribution found for ruamel.yaml* (or another package) | pip inside the hook setup cannot reach PyPI. The template builds hook environments with uv (`pre-commit-uv`); in older projects run `uv add --dev pre-commit-uv`, then `uv run pre-commit install-hooks` |
+| `git commit`: *Author identity unknown* | Set `git config --global user.name …` and `user.email …` in the container (step 7) |
+| `git commit`: *gpg failed to sign the data* | Your host git config asks for signed commits, but the container has no key. Use `git commit --no-gpg-sign`, or run `git config --global commit.gpgsign false` in the container |
 | `make env` says torch or rasterio is not installed | Install the extras: `uv sync --extra ml --extra geo` |
 | JupyterLab asks for a password or token | Run `jupyter server list` in the container terminal and open the URL it prints |
 | pre-commit changed files and the commit stopped | That is expected: `git add` the fixes and commit again |
