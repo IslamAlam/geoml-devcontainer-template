@@ -31,7 +31,8 @@ From the UniBw GitLab, clone with
 `git clone ssh://git@git.unibw.de:2222/l91bisma/geoml-devcontainer-template.git my_project` instead.
 
 `rename_project.py` renames the package `mypackage` everywhere (folder, imports, configs, docs)
-and fills in the author. Run `git init` **before** opening the container: the container setup
+and fills in the author. The base image tag stays `ltr` unless you add `--base-tag <version>`
+(e.g. `--base-tag 3.44.15`) to pin a fixed QGIS version. Run `git init` **before** opening the container: the container setup
 installs the git hooks into this repository.
 
 ![Cloning the template and renaming the package](img/02-clone-and-rename.png)

@@ -2,7 +2,7 @@
   "name": "mypackage",
   "build": {
     "dockerfile": "Dockerfile",
-    "args": { "BASE_TAG": "3.44.15" }
+    "args": { "BASE_TAG": "ltr" }
   },
 
   // GPUs and enough shared memory for PyTorch DataLoader workers.

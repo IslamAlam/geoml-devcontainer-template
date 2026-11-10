@@ -54,7 +54,8 @@ From the UniBw GitLab, clone with
 `git clone ssh://git@git.unibw.de:2222/l91bisma/geoml-devcontainer-template.git my_project` instead.
 
 `rename_project.py` renames the package `mypackage` everywhere (folder, imports, configs, docs)
-and fills in the author. Run `git init` **before** opening the container: the container setup
+and fills in the author. The base image tag stays `ltr` unless you add `--base-tag <version>`
+(e.g. `--base-tag 3.44.15`) to pin a fixed QGIS version. Run `git init` **before** opening the container: the container setup
 installs the git hooks into this repository.
 
 ![Cloning the template and renaming the package](docs/img/02-clone-and-rename.png)
@@ -202,8 +203,10 @@ Never put data into the image or the repository.
 ## Reproducibility
 
 - `uv.lock` pins every Python package. Commit it.
-- The base image is pinned to a concrete QGIS version (`BASE_TAG` in `devcontainer.json`). To update,
-  change it to a newer tag and run *Dev Containers: Rebuild Container*. Pin the uv image tag in the
+- `BASE_TAG` in `devcontainer.json` selects the base image. The default `ltr` follows the QGIS
+  long-term release. For a fixed version, pass it to the rename script
+  (`python3 scripts/rename_project.py my_project --base-tag 3.44.15`) or edit `BASE_TAG` by hand,
+  then run *Dev Containers: Rebuild Container*. Pin the uv image tag in the
   Dockerfile too when you publish results.
 - CI runs in a small uv image by default. To run it in the dev-container image instead, build and
   push `.devcontainer/Dockerfile` and set `CI_IMAGE` in GitLab (Settings → CI/CD → Variables).
@@ -224,7 +227,7 @@ as static assets. Rename `"name"` in `wrangler.jsonc` to your project.
 | `torch.cuda.is_available()` is `False` | Host lacks the NVIDIA Container Toolkit, or `--gpus all` is missing from `runArgs` |
 | DataLoader crashes with shared-memory errors | Increase `--shm-size` in `runArgs` |
 | Files created in the container are owned by root | Keep `"remoteUser": "jovyan"` and `"updateRemoteUserUID": true` |
-| First build is slow | The CUDA + QGIS image is many GB; pull it once per server: `docker pull glcr.b-data.ch/jupyterlab/cuda/qgis/base:3.44.15` |
+| First build is slow | The CUDA + QGIS image is many GB; pull it once per server: `docker pull glcr.b-data.ch/jupyterlab/cuda/qgis/base:ltr` |
 | `docker pull ... not found` / *No manifest found* for the base image | That tag is not (or no longer) published. List the tags with the command below and set another one as `BASE_TAG` in `devcontainer.json` |
 | `postCreateCommand ... failed`: *git failed. Is it installed, and are you in a Git repository?* | The folder is not a git repository yet. Run `git init -b main`, then `make install` (or *Rebuild Container*) |
 | `make env` says torch or rasterio is not installed | Install the extras: `uv sync --extra ml --extra geo` |

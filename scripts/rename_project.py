@@ -2,6 +2,7 @@
 
 Usage:
     python scripts/rename_project.py my_project --author "Jane Doe" --email jane@example.org
+    python scripts/rename_project.py my_project --base-tag 3.44.15   # optional: pin the image
 
 Renames the package ``mypackage`` (folder, imports, configs, docs) and fills in the
 author. Run it once, right after copying the template, then delete this script.
@@ -35,12 +36,18 @@ def main() -> None:
     parser.add_argument("name", help="new package name, e.g. sar_flood or sar-flood")
     parser.add_argument("--author", help="author name for pyproject.toml and LICENSE")
     parser.add_argument("--email", help="author e-mail for pyproject.toml")
+    parser.add_argument(
+        "--base-tag",
+        help="pin the base image to this tag (e.g. 3.44.15) instead of the moving 'ltr' tag",
+    )
     args = parser.parse_args()
 
     dist_name = args.name.strip().lower().replace("_", "-")
     import_name = dist_name.replace("-", "_")
     if not re.fullmatch(r"[a-z][a-z0-9_]*", import_name):
         parser.error("name must start with a letter and contain only letters, digits, '-' or '_'")
+    if args.base_tag and not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", args.base_tag):
+        parser.error("--base-tag must look like 3.44.15 or ltr")
 
     for path in iter_text_files(ROOT):
         if path == Path(__file__).resolve():
@@ -64,6 +71,13 @@ def main() -> None:
         if new != text:
             path.write_text(new, encoding="utf-8")
             print(f"updated  {path.relative_to(ROOT)}")
+
+    if args.base_tag:
+        devcontainer = ROOT / ".devcontainer" / "devcontainer.json"
+        text = devcontainer.read_text(encoding="utf-8")
+        new = re.sub(r'"BASE_TAG": "[^"]*"', f'"BASE_TAG": "{args.base_tag}"', text)
+        devcontainer.write_text(new, encoding="utf-8")
+        print(f"set      BASE_TAG = {args.base_tag} in .devcontainer/devcontainer.json")
 
     old_pkg = ROOT / "src" / OLD
     if old_pkg.exists():
