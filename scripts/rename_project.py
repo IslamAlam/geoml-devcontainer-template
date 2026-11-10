@@ -61,6 +61,11 @@ def main() -> None:
         new = new.replace(f'name = "{OLD}"', f'name = "{dist_name}"')
         new = new.replace(f'"name": "{OLD}"', f'"name": "{dist_name}"')
         new = new.replace(f"site_name: {OLD}", f"site_name: {dist_name}")
+        if path.name == "mkdocs.yml":
+            # the template's own docs site and repository are not yours
+            new = re.sub(r"(?m)^site_name: .*$", f"site_name: {dist_name}", new)
+            new = re.sub(r"(?m)^site_url: .*\n", "", new)
+            new = re.sub(r"(?m)^repo_url: .*$", f"repo_url: https://git.example.org/your-group/{dist_name}", new)
         new = new.replace(f'version("{OLD}")', f'version("{dist_name}")')
         new = new.replace(OLD, import_name)
         if args.author:

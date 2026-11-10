@@ -1,6 +1,7 @@
-site_name: mypackage
-site_description: A Python package for geospatial / SAR machine learning.
-repo_url: https://git.example.org/your-group/mypackage
+site_name: geoml-devcontainer-template
+site_description: Python package template with a GPU dev container for geospatial, SAR and ML work.
+site_url: https://geoml-template.imansour.net/
+repo_url: https://github.com/IslamAlam/geoml-devcontainer-template
 edit_uri: edit/main/docs/
 
 nav:
