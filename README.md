@@ -29,8 +29,17 @@ No CUDA toolkit is needed on the host, only the driver. On a machine without an 
 
 ### 1. Make it your project
 
+The template lives in two places (same content):
+
+- GitHub: <https://github.com/IslamAlam/geoml-devcontainer-template>
+- UniBw GitLab: <https://git.unibw.de/l91bisma/geoml-devcontainer-template>
+
 ```bash
-git clone <this-template-url> my_project
+# from GitHub
+git clone https://github.com/IslamAlam/geoml-devcontainer-template.git my_project
+# or from the UniBw GitLab (SSH)
+git clone ssh://git@git.unibw.de:2222/l91bisma/geoml-devcontainer-template.git my_project
+
 cd my_project
 rm -rf .git && git init                      # start your own history
 python3 scripts/rename_project.py my_project --author "Jane Doe" --email jane@example.org
