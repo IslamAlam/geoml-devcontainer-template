@@ -2,7 +2,12 @@
   "name": "mypackage",
   "build": {
     "dockerfile": "Dockerfile",
-    "args": { "BASE_TAG": "ltr" }
+    // BASE_IMAGE: the b-data CUDA + QGIS image. If glcr.b-data.ch is unreachable, use the mirror
+    // "quay.io/is3mansour/jupyterlab-cuda-qgis-base" (see README, "Image mirror").
+    "args": {
+      "BASE_IMAGE": "glcr.b-data.ch/jupyterlab/cuda/qgis/base",
+      "BASE_TAG": "ltr"
+    }
   },
 
   // GPUs and enough shared memory for PyTorch DataLoader workers.

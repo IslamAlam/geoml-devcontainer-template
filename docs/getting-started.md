@@ -58,6 +58,12 @@ After changing the `Dockerfile` or `devcontainer.json`, run **Dev Containers: Re
 
 ![Dev Containers commands in the command palette](img/05-reopen-command.png)
 
+!!! tip "If the image download fails"
+    If the log shows *502 Bad Gateway*, *not found* or *No manifest found* for
+    `glcr.b-data.ch/...`, b-data's registry is down. Switch `BASE_IMAGE` in
+    `.devcontainer/devcontainer.json` to the mirror `quay.io/is3mansour/jupyterlab-cuda-qgis-base`
+    (source: <https://github.com/b-data/jupyterlab-qgis-docker-stack>) and rebuild.
+
 ## 5. Wait for the first build
 
 Click **show log** to follow progress. The first start pulls a large image and takes a few

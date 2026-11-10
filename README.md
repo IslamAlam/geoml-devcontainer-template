@@ -222,6 +222,22 @@ Pages (Deploy → Pages shows the URL). No extra setup is needed.
 `npx wrangler deploy`. `wrangler.jsonc` builds the site with mkdocs into `site/` and serves it
 as static assets. Rename `"name"` in `wrangler.jsonc` to your project.
 
+## Image mirror
+
+The base image comes from b-data's registry `glcr.b-data.ch`. If that registry is unreachable
+(`docker pull` fails with *502 Bad Gateway*, *not found* or *No manifest found*), use the mirror on
+Quay.io. In `.devcontainer/devcontainer.json`, set:
+
+```jsonc
+"BASE_IMAGE": "quay.io/is3mansour/jupyterlab-cuda-qgis-base",
+"BASE_TAG": "ltr"
+```
+
+then run *Dev Containers: Rebuild Container*. The mirror is a copy of the b-data image, not a
+different build. Its source code is at
+<https://github.com/b-data/jupyterlab-qgis-docker-stack> (GitHub mirror of
+<https://gitlab.b-data.ch/jupyterlab/qgis/docker-stack>).
+
 ## Troubleshooting
 
 | Symptom | Fix |
@@ -230,7 +246,7 @@ as static assets. Rename `"name"` in `wrangler.jsonc` to your project.
 | DataLoader crashes with shared-memory errors | Increase `--shm-size` in `runArgs` |
 | Files created in the container are owned by root | Keep `"remoteUser": "jovyan"` and `"updateRemoteUserUID": true` |
 | First build is slow | The CUDA + QGIS image is many GB; pull it once per server: `docker pull glcr.b-data.ch/jupyterlab/cuda/qgis/base:ltr` |
-| `docker pull ... not found` / *No manifest found* for the base image | That tag is not (or no longer) published. List the tags with the command below and set another one as `BASE_TAG` in `devcontainer.json` |
+| `docker pull ... not found`, *No manifest found* or *502 Bad Gateway* for the base image | The b-data registry is down or the tag is gone. Switch to the [image mirror](#image-mirror), or list the tags with the command below and set another `BASE_TAG` |
 | `postCreateCommand ... failed`: *git failed. Is it installed, and are you in a Git repository?* | The folder is not a git repository yet. Run `git init -b main`, then `make install` (or *Rebuild Container*) |
 | `make env` says torch or rasterio is not installed | Install the extras: `uv sync --extra ml --extra geo` |
 | JupyterLab asks for a password or token | Run `jupyter server list` in the container terminal and open the URL it prints |
