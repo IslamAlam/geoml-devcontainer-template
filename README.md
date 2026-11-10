@@ -27,42 +27,89 @@ Author: Islam Mansour.
 No CUDA toolkit is needed on the host, only the driver. On a machine without an NVIDIA GPU
 (e.g. an Apple Silicon Mac), remove `"--gpus", "all"` from `runArgs` in `.devcontainer/devcontainer.json`.
 
-### 1. Make it your project
+### 1. Connect to the GPU server
 
-The template lives in two places (same content):
+In VS Code, open the **Remote Explorer**, expand **SSH** and click the arrow next to your server
+(here `pontus`) to connect. If the server is not listed, add it with
+*Remote-SSH: Open SSH Configuration File…*.
 
-- GitHub: <https://github.com/IslamAlam/geoml-devcontainer-template>
-- UniBw GitLab: <https://git.unibw.de/l91bisma/geoml-devcontainer-template>
+![Remote Explorer with the SSH hosts](docs/img/01-remote-ssh.png)
+
+When connected, the status bar in the bottom-left shows `SSH: <server>`.
+
+### 2. Make it your project
+
+Open a terminal on the server (*Terminal → New Terminal*) and run:
 
 ```bash
-# from GitHub
 git clone https://github.com/IslamAlam/geoml-devcontainer-template.git my_project
-# or from the UniBw GitLab (SSH)
-git clone ssh://git@git.unibw.de:2222/l91bisma/geoml-devcontainer-template.git my_project
-
 cd my_project
-rm -rf .git && git init                      # start your own history
+rm -rf .git
+git init -b main
 python3 scripts/rename_project.py my_project --author "Jane Doe" --email jane@example.org
 rm scripts/rename_project.py
 ```
 
-This renames the package `mypackage` everywhere (folder, imports, configs, docs).
+From the UniBw GitLab, clone with
+`git clone ssh://git@git.unibw.de:2222/l91bisma/geoml-devcontainer-template.git my_project` instead.
 
-### 2. Open it in the container
+`rename_project.py` renames the package `mypackage` everywhere (folder, imports, configs, docs)
+and fills in the author. Run `git init` **before** opening the container: the container setup
+installs the git hooks into this repository.
 
-1. (GPU server) VS Code → *Remote-SSH: Connect to Host…* → open the project folder.
-2. Command palette → **Dev Containers: Reopen in Container**.
-3. Wait for the first build. `postCreateCommand.sh` runs `uv sync` and installs the pre-commit hooks.
+![Cloning the template and renaming the package](docs/img/02-clone-and-rename.png)
 
-### 3. Check that everything works
+### 3. Open the project folder
+
+*File → Open Folder…* and select the new `my_project` folder on the server.
+
+![Open Folder dialog on the server](docs/img/03-open-folder.png)
+
+### 4. Reopen it in the container
+
+VS Code detects `.devcontainer/` and offers **Reopen in Container**:
+
+![Reopen in Container notification](docs/img/04-reopen-notification.png)
+
+If you missed the notification, use the command palette (<kbd>F1</kbd> or
+<kbd>Ctrl/Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) → **Dev Containers: Reopen in Container**.
+After changing the `Dockerfile` or `devcontainer.json`, use **Rebuild and Reopen in Container**.
+
+![Dev Containers commands in the command palette](docs/img/05-reopen-command.png)
+
+### 5. Wait for the first build
+
+Click **show log** to follow progress. The first start pulls a large image and takes a few
+minutes; later starts take seconds. Lines with `Exit code 1` in the log are normal checks, not errors.
+
+![Connecting to the dev container, with the build log](docs/img/06-connecting.png)
+
+The container is ready when the status bar shows `Dev Container: my-project @ <server>` and the
+setup terminal ends with `Dev container ready. Try: make help`.
+
+### 6. Check that everything works
+
+`make help` lists the available commands:
+
+![make help](docs/img/07-make-help.png)
+
+Install the ML extra (PyTorch) and check Python, GDAL and the GPU:
 
 ```bash
-make env     # Python, GDAL, PyTorch, CUDA, GPU name
-make test    # tests + coverage
-make check   # lock file, ruff, mypy
+uv sync --extra ml
+make env
 ```
 
-`make env` reports PyTorch only after `uv sync --extra ml` (see below).
+![make env showing CUDA and the GPU](docs/img/08-make-env-gpu.png)
+
+Run the tests and the code-quality checks:
+
+```bash
+make test
+make check
+```
+
+![make test with coverage](docs/img/09-make-test.png)
 
 ---
 
@@ -75,6 +122,9 @@ uv sync --extra geo --extra ml   # install the optional geo / ML stacks
 uv run python examples/check_environment.py
 make help                        # list all make targets
 ```
+
+Extras are not remembered: a plain `uv sync` removes `geo`/`ml` again. Repeat the `--extra` flags,
+or use `uv sync --all-extras`.
 
 Rule of thumb: **never `pip install` by hand**. Use `uv add`, so the change is in `pyproject.toml`
 and `uv.lock` and everyone, including CI, gets the same environment.
@@ -96,19 +146,36 @@ pyproject.toml  uv.lock  Makefile  tox.ini
 .pre-commit-config.yaml  .gitlab-ci.yml  mkdocs.yml
 ```
 
-## QGIS and JupyterLab
+## JupyterLab and QGIS
 
-The container keeps the image's own start command (`"overrideCommand": false`), so JupyterLab runs
-on port 8888 and VS Code forwards it automatically. Open it in your browser, then open the
-**Desktop** (Xfce via noVNC) to run QGIS on the same files your code writes.
+The container keeps the image's own start command (`"overrideCommand": false`), so JupyterLab
+runs on port 8888 next to your editor.
 
-Get the JupyterLab URL with its token from a terminal in the container:
+1. **Open JupyterLab.** In the **Ports** tab, VS Code has already forwarded port 8888.
+   Click `localhost:8888` (or the globe icon) to open it in your browser.
 
-```bash
-jupyter server list
-```
+    ![Ports tab with JupyterLab forwarded](docs/img/10-ports.png)
 
-Without VS Code, forward the port yourself: `ssh -L 8888:localhost:8888 gpu-server`.
+2. **Log in with the token.** JupyterLab asks for a token:
+
+    ![JupyterLab token page](docs/img/11-jupyter-token-page.png)
+
+    In a terminal in the container, run `jupyter server list` and open the printed URL, or paste
+    the part after `token=` into the page:
+
+    ![jupyter server list output, token blurred](docs/img/12-jupyter-server-list.png)
+
+3. **Start the desktop.** In the JupyterLab launcher, click **QGIS Desktop**. It opens an Xfce
+   desktop (noVNC) in a new browser tab.
+
+    ![JupyterLab launcher with QGIS Desktop](docs/img/13-jupyterlab-launcher.png)
+
+4. **Use QGIS, GRASS or SAGA.** They are under *Applications → Education*. Your project is at
+   `/workspaces/my_project`, so QGIS sees exactly the files your code writes.
+
+    ![QGIS on the Xfce desktop](docs/img/14-qgis-desktop.png)
+
+Without VS Code, forward the port yourself: `ssh -L 8888:localhost:8888 <server>`.
 
 **PyQGIS:** QGIS's Python bindings live in the image's system Python, not in `.venv`. To use
 `import qgis` from your project, create the venv with access to system packages:
@@ -154,6 +221,9 @@ as static assets. Rename `"name"` in `wrangler.jsonc` to your project.
 | DataLoader crashes with shared-memory errors | Increase `--shm-size` in `runArgs` |
 | Files created in the container are owned by root | Keep `"remoteUser": "jovyan"` and `"updateRemoteUserUID": true` |
 | First build is slow | The CUDA + QGIS image is many GB; pull it once per server: `docker pull glcr.b-data.ch/jupyterlab/cuda/qgis/base:ltr` |
+| `postCreateCommand ... failed`: *git failed. Is it installed, and are you in a Git repository?* | The folder is not a git repository yet. Run `git init -b main`, then `make install` (or *Rebuild Container*) |
+| `make env` says torch or rasterio is not installed | Install the extras: `uv sync --extra ml --extra geo` |
+| JupyterLab asks for a password or token | Run `jupyter server list` in the container terminal and open the URL it prints |
 | pre-commit changed files and the commit stopped | That is expected: `git add` the fixes and commit again |
 
 ## Credits

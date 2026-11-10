@@ -5,6 +5,7 @@ edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
+  - Getting started: getting-started.md
   - Development: dev.md
   - API reference: api.md
 

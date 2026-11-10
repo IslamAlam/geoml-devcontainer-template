@@ -8,8 +8,16 @@ else
   uv sync --all-groups
 fi
 
-# Install the git hooks
-uv run pre-commit install --install-hooks
+# The workspace is owned by your host user; let git trust it inside the container
+git config --global --add safe.directory "$(pwd)"
+
+# Install the git hooks (needs a git repository)
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  uv run pre-commit install --install-hooks
+else
+  echo "Note: $(pwd) is not a git repository yet, so the pre-commit hooks were not installed."
+  echo "      Run 'git init -b main' and then 'make install'."
+fi
 
 # Auto-activate the project venv in new terminals
 for rc in "${HOME}/.bashrc" "${HOME}/.zshrc"; do

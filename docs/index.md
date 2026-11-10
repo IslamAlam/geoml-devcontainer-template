@@ -9,4 +9,5 @@ db = linear_to_db(sigma0)
 x = normalize(db)
 ```
 
+New here? Follow [Getting started](getting-started.md) (with screenshots).
 See [Development](dev.md) for how to work on the package.

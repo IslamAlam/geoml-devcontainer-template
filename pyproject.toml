@@ -61,7 +61,8 @@ build-backend = "hatchling.build"
 packages = ["src/mypackage"]
 
 [tool.uv]
-default-groups = ["dev"]
+# Installed by every `uv sync`, so adding an extra never removes the dev/docs tools
+default-groups = ["dev", "docs"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
