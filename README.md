@@ -233,8 +233,9 @@ Quay.io. In `.devcontainer/devcontainer.json`, set:
 "BASE_TAG": "ltr"
 ```
 
-then run *Dev Containers: Rebuild Container*. The mirror is a copy of the b-data image, not a
-different build. Its source code is at
+then run *Dev Containers: Rebuild Container*. The mirror is the b-data CUDA + QGIS image
+(QGIS LTR) with this template's small additions already applied (build tools, htop, tmux, nvtop and
+uv), which the Dockerfile simply installs again. Source code of the b-data image:
 <https://github.com/b-data/jupyterlab-qgis-docker-stack> (GitHub mirror of
 <https://gitlab.b-data.ch/jupyterlab/qgis/docker-stack>).
 
