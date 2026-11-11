@@ -8,6 +8,7 @@ nav:
   - Home: index.md
   - Getting started: getting-started.md
   - Glossary: glossary.md
+  - Choosing versions: versions.md
   - Development: dev.md
   - API reference: api.md
 

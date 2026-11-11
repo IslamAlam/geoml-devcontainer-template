@@ -249,6 +249,11 @@ Never put data into the image or the repository.
 ## Reproducibility
 
 - `uv.lock` pins every Python package. Commit it.
+- Use **LTR** images. To see which CUDA version an image contains, check b-data's
+  [CUDA version matrix](https://github.com/b-data/jupyterlab-qgis-docker-stack/blob/main/CUDA_VERSION_MATRIX.md#ltr);
+  for PyTorch, pick a build for a compatible CUDA version on the
+  [PyTorch page](https://pytorch.org/get-started/locally/#supported-linux-distributions).
+  Details: [Choosing versions](https://geoml-template.imansour.net/versions/).
 - `BASE_TAG` in `devcontainer.json` selects the base image. The default `ltr` follows the QGIS
   long-term release. For a fixed version, pass it to the rename script
   (`python3 scripts/rename_project.py my_project --base-tag 3.44.15`) or edit `BASE_TAG` by hand,

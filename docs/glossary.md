@@ -27,6 +27,11 @@ science background needed.
 :   The version label after the colon in an image name, for example `:ltr` or `:3.44.15` in
     `glcr.b-data.ch/jupyterlab/cuda/qgis/base:ltr`.
 
+**LTR**
+:   *Long-term release*: a version line that gets bug fixes for a long time with few changes.
+    The template uses the QGIS LTR images (`ltr` tag) by default. See
+    [Choosing versions](versions.md).
+
 **Docker**
 :   The program on the server that downloads images and runs containers.
 
