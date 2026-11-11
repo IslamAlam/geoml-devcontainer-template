@@ -25,7 +25,12 @@ Author: Islam Mansour.
 | Where the container runs | You need |
 |---|---|
 | Linux GPU server / workstation | Docker, NVIDIA driver, [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/) |
-| Your laptop | VS Code with the *Dev Containers* extension (and *Remote - SSH* to use a server) |
+| Your laptop | VS Code with the *Remote - SSH* and *Dev Containers* extensions |
+
+**Easiest:** import the shared VS Code **Research profile** from
+<https://tutorial.geoml-template.imansour.net/>: it installs both extensions and the other essentials.
+When you open this project, VS Code also offers to install the recommended extensions; click
+**Install**.
 
 No CUDA toolkit is needed on the host, only the driver. On a machine without an NVIDIA GPU
 (e.g. an Apple Silicon Mac), remove `"--gpus", "all"` from `runArgs` in `.devcontainer/devcontainer.json`.
@@ -160,6 +165,11 @@ make help                        # list all make targets
 
 Extras are not remembered: a plain `uv sync` removes `geo`/`ml` again. Repeat the `--extra` flags,
 or use `uv sync --all-extras`.
+
+Long trainings: the container keeps running when you close VS Code (`"shutdownAction": "none"`),
+and a job started inside `tmux` also survives a dropped SSH connection
+(`tmux new -s train`, detach with <kbd>Ctrl</kbd>+<kbd>B</kbd> then <kbd>D</kbd>, come back with
+`tmux attach -t train`). Stop containers you no longer need with `docker stop <name>`.
 
 Rule of thumb: **never `pip install` by hand**. Use `uv add`, so the change is in `pyproject.toml`
 and `uv.lock` and everyone, including CI, gets the same environment.

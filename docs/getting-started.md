@@ -4,6 +4,12 @@ From an empty folder to a GPU-ready package with JupyterLab and QGIS.
 You need VS Code with the *Remote - SSH* and *Dev Containers* extensions, and a Linux server
 with Docker, the NVIDIA driver and the NVIDIA Container Toolkit.
 
+!!! tip "Set up VS Code in one step"
+    Import the shared **Research profile** from
+    [tutorial.geoml-template.imansour.net](https://tutorial.geoml-template.imansour.net/). It installs
+    *Remote - SSH*, *Dev Containers* and the other essentials. Without the *Dev Containers* extension,
+    VS Code never offers **Reopen in Container**.
+
 ## 1. Connect to the GPU server
 
 In VS Code, open the **Remote Explorer**, expand **SSH** and click the arrow next to your server

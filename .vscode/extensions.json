@@ -1,0 +1,10 @@
+{
+  // VS Code offers to install these when you open the project.
+  // Remote - SSH and Dev Containers are needed for "Reopen in Container".
+  "recommendations": [
+    "ms-vscode-remote.remote-ssh",
+    "ms-vscode-remote.remote-containers",
+    "ms-python.python",
+    "charliermarsh.ruff"
+  ]
+}
