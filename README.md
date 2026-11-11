@@ -301,6 +301,7 @@ uv), which the Dockerfile simply installs again. Source code of the b-data image
 | `pre-commit` fails with *No matching distribution found for ruamel.yaml* (or another package) | pip inside the hook setup cannot reach PyPI. The template builds hook environments with uv (`pre-commit-uv`); in older projects run `uv add --dev pre-commit-uv`, then `uv run pre-commit install-hooks` |
 | `git commit`: *Author identity unknown* | Set `git config --global user.name …` and `user.email …` in the container (step 7) |
 | `git commit`: *gpg failed to sign the data* | Your host git config asks for signed commits, but the container has no key. Use `git commit --no-gpg-sign`, or run `git config --global commit.gpgsign false` in the container |
+| The terminal prompt shows empty boxes or question marks | The prompt uses icons: install a [Nerd Font](https://www.nerdfonts.com/font-downloads) (e.g. FiraCode, JetBrains Mono or Meslo) on your laptop and set it as `terminal.integrated.fontFamily` in VS Code; the Research profile already does this |
 | `make env` says torch or rasterio is not installed | Install the extras: `uv sync --extra ml --extra geo` |
 | JupyterLab asks for a password or token | Run `jupyter server list` in the container terminal and open the URL it prints |
 | pre-commit changed files and the commit stopped | That is expected: `git add` the fixes and commit again |
