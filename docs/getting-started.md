@@ -2,13 +2,66 @@
 
 From an empty folder to a GPU-ready package with JupyterLab and QGIS.
 You need VS Code with the *Remote - SSH* and *Dev Containers* extensions, and a Linux server
-with Docker, the NVIDIA driver and the NVIDIA Container Toolkit.
+with Docker, the NVIDIA driver and the NVIDIA Container Toolkit. New to these words? The
+[Glossary](glossary.md) explains them in plain language.
 
 !!! tip "Set up VS Code in one step"
     Import the shared **Research profile** from
     [tutorial.geoml-template.imansour.net](https://tutorial.geoml-template.imansour.net/). It installs
     *Remote - SSH*, *Dev Containers* and the other essentials. Without the *Dev Containers* extension,
     VS Code never offers **Reopen in Container**.
+
+## 0. Connect to the server for the first time
+
+Skip this step if VS Code already lists the server under **Remote Explorer → SSH**.
+New words? See the [Glossary](glossary.md).
+
+**a) Create an SSH key** on your laptop, in a terminal (on Windows: *PowerShell*). Press
+<kbd>Enter</kbd> to accept the defaults; a passphrase is optional but recommended.
+
+```bash
+ssh-keygen -t ed25519 -C "jane.doe@unibw.de"
+```
+
+**b) Copy the public key to the server.** You type your server password one last time.
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh jdoe@server.example.org "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+    ```
+
+=== "macOS / Linux"
+
+    ```bash
+    ssh-copy-id jdoe@server.example.org
+    ```
+
+Replace `jdoe` with your user name and `server.example.org` with the server’s address.
+
+**c) Give the server a short name.** In VS Code: <kbd>F1</kbd> → *Remote-SSH: Open SSH
+Configuration File…* → choose the file in your user folder, and add:
+
+```text
+Host gpu-server
+    HostName server.example.org
+    User jdoe
+    IdentityFile ~/.ssh/id_ed25519
+```
+
+**d) Test it** in the terminal. The second command must list the GPUs; *permission denied* means
+your user is not allowed to use Docker yet, so ask the server’s admin to add you to the `docker`
+group.
+
+```bash
+ssh gpu-server
+docker run --rm --gpus all ubuntu nvidia-smi
+```
+
+!!! note "Pushing to GitLab or GitHub from the server"
+    Cloning the template needs no key. To push your own project from the server, run the same
+    `ssh-keygen` command **on the server** and add the content of `~/.ssh/id_ed25519.pub` to your
+    GitLab or GitHub account (*Settings → SSH Keys*).
 
 ## 1. Connect to the GPU server
 

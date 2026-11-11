@@ -24,6 +24,7 @@ Source code: [GitHub](https://github.com/IslamAlam/geoml-devcontainer-template) 
 | **At the end** | Your own package with passing tests, a working GPU, JupyterLab and QGIS on the same files |
 
 **Start here: [Getting started](getting-started.md)**, a step-by-step guide with screenshots.
+Unsure what an *image*, a *container* or a *lockfile* is? See the [Glossary](glossary.md).
 For the background, see the two-part
 [tutorial “Research code that survives”](https://tutorial.geoml-template.imansour.net/):
 Part 1 covers the everyday tools (git, VS Code, zsh and tmux, uv, experiment tracking),

@@ -35,6 +35,11 @@ When you open this project, VS Code also offers to install the recommended exten
 No CUDA toolkit is needed on the host, only the driver. On a machine without an NVIDIA GPU
 (e.g. an Apple Silicon Mac), remove `"--gpus", "all"` from `runArgs` in `.devcontainer/devcontainer.json`.
 
+First time on the server? The [setup guide](https://geoml-template.imansour.net/getting-started/)
+starts with creating an SSH key and connecting (step 0), and the
+[glossary](https://geoml-template.imansour.net/glossary/) explains terms like *image* and
+*container* in plain language.
+
 ### 1. Connect to the GPU server
 
 In VS Code, open the **Remote Explorer**, expand **SSH** and click the arrow next to your server

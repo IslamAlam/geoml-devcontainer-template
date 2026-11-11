@@ -7,6 +7,7 @@ edit_uri: edit/main/docs/
 nav:
   - Home: index.md
   - Getting started: getting-started.md
+  - Glossary: glossary.md
   - Development: dev.md
   - API reference: api.md
 
@@ -35,6 +36,9 @@ theme:
 
 markdown_extensions:
   - admonition
+  - def_list
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.superfences
   - toc:
       permalink: true
