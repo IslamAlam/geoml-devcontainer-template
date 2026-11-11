@@ -12,7 +12,7 @@ One `git clone` and "Reopen in Container" gives you:
 - **Docs** with mkdocs-material + mkdocstrings, and a **GitLab CI** pipeline that runs in the same image
 
 **Documentation and setup guide: <https://geoml-template.imansour.net/>** ·
-[Tutorial slides](https://tutorial.geoml-template.imansour.net/)
+[Tutorial: “Research code that survives”](https://tutorial.geoml-template.imansour.net/)
 
 Author: Islam Mansour.
 
