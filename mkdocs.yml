@@ -21,6 +21,8 @@ plugins:
 
 theme:
   name: material
+  favicon: assets/favicon.svg
+  logo: assets/favicon.svg
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
