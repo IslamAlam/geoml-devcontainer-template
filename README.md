@@ -50,6 +50,12 @@ In VS Code, open the **Remote Explorer**, expand **SSH** and click the arrow nex
 
 When connected, the status bar in the bottom-left shows `SSH: <server>`.
 
+**Once per server:** open the **Extensions** view, search for
+[Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+and click **Install in SSH: <server>** (or accept VS Code’s pop-up to install the recommended
+extensions when you open the project). Without it, VS Code may not offer **Reopen in Container**
+on the server.
+
 ### 2. Make it your project
 
 Open a terminal on the server (*Terminal → New Terminal*) and run:
